@@ -13,7 +13,14 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+// Enable CORS for your frontend domain
+app.use(cors({
+    origin: 'https://ecommerce-frontend-opqm9a821-wael-alys-projects.vercel.app',  // Frontend URL
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type,Authorization'
+  }));
+//app.use(cors());
+
 app.use(express.json());
 app.use(morgan('dev'));
 
