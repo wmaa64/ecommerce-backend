@@ -15,9 +15,12 @@ const app = express();
 
 // Enable CORS for your frontend domain
 app.use(cors({
-    origin: 'https://ecommerce-frontend-35qz0fsyz-wael-alys-projects.vercel.app',  // Frontend URL
-    methods: 'GET,POST,PUT,DELETE'
+    origin: '*',  // Allow any origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
   }));
+
+  
 //app.use(cors());
 
 app.use(express.json());
