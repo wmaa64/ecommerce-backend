@@ -1,4 +1,4 @@
-import dbConnect from '../../utils/dbConnect';
+import dbConnect from '../../utils/dbConnect.js';
 import Category from '../../models/Category';
 import Subcategory from '../../models/Subcategory';
 

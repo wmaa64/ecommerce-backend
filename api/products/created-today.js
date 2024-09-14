@@ -1,5 +1,5 @@
 // api/products/created-today.js
-import dbConnect from '../../utils/dbConnect';  // Adjust path as needed
+import dbConnect from '../../utils/dbConnect.js';  // Adjust path as needed
 import Product from '../../models/Product';    // Product model
 
 export default async function handler(req, res) {
