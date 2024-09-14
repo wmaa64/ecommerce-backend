@@ -1,5 +1,5 @@
 import dbConnect from '../../utils/dbConnect.js';
-import Subcategory from '../../models/Subcategory.js';
+import Subcategory from '../../models/Subcategory.js'
 
 export default async function handler(req, res) {
   await dbConnect();
