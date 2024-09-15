@@ -1,7 +1,8 @@
 import dbConnect from '../../utils/dbConnect.js';
 import Subcategory from '../../models/Subcategory.js';
+import allowCors from '../../utils/allowCors.js';
 
-export default async function handler(req, res) {
+const handler = async (req, res) => {
   await dbConnect();
 
   const { id } = req.query;  // Get the category ID from the URL parameter
@@ -28,3 +29,5 @@ export default async function handler(req, res) {
     res.status(405).json({ message: 'Method not allowed' });
   }
 }
+
+export default allowCors(handler);

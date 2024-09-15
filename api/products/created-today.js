@@ -1,8 +1,9 @@
 // api/products/created-today.js
 import dbConnect from '../../utils/dbConnect.js';  // Adjust path as needed
 import Product from '../../models/Product.js';    // Product model
+import allowCors from '../../utils/allowCors.js';
 
-export default async function handler(req, res) {
+const  handler = async (req, res) => {
   await dbConnect();  // Connect to MongoDB
 
   if (req.method === 'GET') {
@@ -33,3 +34,5 @@ else {
     res.status(405).json({ message: 'Method not allowed' });
   }
 }
+
+export default allowCors(handler);
