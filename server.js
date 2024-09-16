@@ -14,14 +14,15 @@ dotenv.config();
 const app = express();
 
 // Enable CORS for your frontend domain
+/*
 app.use(cors({
     origin: '*',  // Allow any origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
   }));
+*/
 
-  
-//app.use(cors());
+app.use(cors());
 
 app.use(express.json());
 app.use(morgan('dev'));
