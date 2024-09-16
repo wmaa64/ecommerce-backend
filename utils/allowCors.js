@@ -16,5 +16,9 @@ const allowCors = fn => async (req, res) => {
     return await fn(req, res);
   };
   
-  export default allowCors;
+  const handler = async (req, res) => {
+    res.status(200).json({ message: 'Hello from API' });
+  };
+
+  export default allowCors(handler);
   
