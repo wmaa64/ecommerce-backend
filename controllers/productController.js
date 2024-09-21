@@ -5,7 +5,7 @@ import Product from '../models/Product.js';
 const getProducts = async (req, res) => {
   try {
     // Fetch products from the database
-    const products = await Product.find();
+    const products = await Product.find().populate('subcategoryId');;
 
     // Send the products in the response
     res.status(200).json(products);
@@ -98,6 +98,46 @@ const getSubCategoriesProducts = async (req, res) => {
     res.status(500).json({ message: 'Server error. Unable to fetch products.' });
   }
 };
+//-----------
+
+// @route   POST /api/products
+// @desc    Add a new product
+// create a new Product
+const createProduct =  async (req, res) => {
+  const { name, price, image, brand, countInStock, description, subcategoryId } = req.body;
+
+  try {
+    const newProduct = new Product({ name, price, image, brand, countInStock, description, subcategoryId });
+    const product = await newProduct.save();
+    res.json(product);
+  } catch (error) {
+    res.status(500).send('Server Error');
+  }
+};
+
+// Update a category
+const updateProduct = async (req, res) => {
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
 
 
-export { getProducts, getProductById, getProductsByQuery, getTodayProducts, getSubCategoriesProducts };
+// Delete a category
+const deleteProduct =  async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(200).json('Product has been deleted...');
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+
+export { getProducts, getProductById, getProductsByQuery, getTodayProducts, getSubCategoriesProducts, createProduct, updateProduct, deleteProduct };

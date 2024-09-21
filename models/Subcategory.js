@@ -6,6 +6,6 @@ const SubcategorySchema = new mongoose.Schema({
     description: { type: String, trim: true }
 });
 
-const Subcategory = mongoose.model('subcategory', SubcategorySchema);
+const Subcategory = mongoose.model('Subcategory', SubcategorySchema);
 
 export default Subcategory ;

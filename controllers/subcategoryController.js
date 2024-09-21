@@ -3,7 +3,7 @@ import Subcategory from '../models/Subcategory.js';
 const getSubCategories = async (req, res) => {
   try {
     // Fetch subcategories from the database
-    const subcategories = await Subcategory.find().populate('categoryId', 'name');;
+    const subcategories = await Subcategory.find().populate('categoryId', 'name');
 
     // Send the subcategories in the response
     res.status(200).json(subcategories);
