@@ -5,7 +5,7 @@ import Product from '../models/Product.js';
 const getProducts = async (req, res) => {
   try {
     // Fetch products from the database
-    const products = await Product.find().populate('subcategoryId');;
+    const products = await Product.find().populate('subcategoryId', 'name');;
 
     // Send the products in the response
     res.status(200).json(products);

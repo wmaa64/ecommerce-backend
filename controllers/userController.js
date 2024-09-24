@@ -1,54 +1,113 @@
-import asyncHandler from 'express-async-handler';
+// controllers/userController.js
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
 
-const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+// Register a new user
+const registerUser = async (req, res) => {
+  try {
+    const { name, email, password, isSeller } = req.body;
 
-  const user = await User.findOne({ email });
+    // Check if user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
 
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error('Invalid email or password');
+    // Create a new user
+    const user = await User.create({ name, email, password, isSeller });
+
+    if (user) {
+      return res.status(201).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        isSeller: user.isSeller,
+        token: generateToken(user._id),
+      });
+    } else {
+      return res.status(400).json({ message: 'Invalid user data' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-});
+};
 
-const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+// Authenticate user & get token
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  const userExists = await User.findOne({ email });
+    // Find user by email
+    const user = await User.findOne({ email });
 
-  if (userExists) {
-    res.status(400);
-    throw new Error('User already exists');
+    // Check if password matches
+    if (user && (await user.matchPassword(password))) {
+      return res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        isSeller: user.isSeller,
+        token: generateToken(user._id),
+      });
+    } else {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
+};
 
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
+// Get user profile
+const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
 
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error('Invalid user data');
+    if (user) {
+      return res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        isSeller: user.isSeller,
+      });
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-});
+};
 
-export { authUser, registerUser };
+// Update user profile
+const updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      // Update user fields
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
+
+      const updatedUser = await user.save();
+      return res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        isSeller: updatedUser.isSeller,
+        token: generateToken(updatedUser._id),
+      });
+    } else {
+      return res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export { registerUser,loginUser,getUserProfile, updateUserProfile};
