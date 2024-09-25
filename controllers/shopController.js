@@ -1,0 +1,51 @@
+import Shop from '../models/Shop.js';
+
+const getShops = async (req, res) => {
+  try {
+    // Fetch Shops from the database
+    const shops = await Shop.find().populate('userId', 'name');
+
+    // Send the shops in the response
+    res.status(200).json(shops);
+  } catch (error) {
+    // Handle any errors
+    console.error('Error fetching shops:', error);
+    res.status(500).json({ message: 'Server error. Unable to fetch shops.' });
+  }
+};
+
+// Create a new shop
+const createShop = async (req, res) => {
+  try {
+    const newShop = new Shop(req.body);
+    const savedShop = await newShop.save();
+    res.status(201).json(savedShop);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+// Update a category
+const updateShop = async (req, res) => {
+  try {
+    const updatedShop = await Shop.findByIdAndUpdate(req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    res.status(200).json(updatedShop);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+// Delete a category
+const deleteShop =  async (req, res) => {
+  try {
+    await Shop.findByIdAndDelete(req.params.id);
+    res.status(200).json('Shop has been deleted...');
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+export { getShops,createShop,updateShop, deleteShop };

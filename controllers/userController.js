@@ -2,6 +2,20 @@
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
 
+const getUsers = async (req, res) => {
+  try {
+    // Fetch subcategories from the database
+    const users = await User.find();
+
+    // Send the users in the response
+    res.status(200).json(users);
+  } catch (error) {
+    // Handle any errors
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Server error. Unable to fetch users.' });
+  }
+};
+
 // Register a new user
 const registerUser = async (req, res) => {
   try {
@@ -110,4 +124,4 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-export { registerUser,loginUser,getUserProfile, updateUserProfile};
+export { getUsers, registerUser,loginUser,getUserProfile, updateUserProfile};
