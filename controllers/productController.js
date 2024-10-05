@@ -1,11 +1,13 @@
 //import asyncHandler from 'express-async-handler';
 import Product from '../models/Product.js';
-
+import { upload } from '../utils/cloudinaryConfig.js';
 
 const getProducts = async (req, res) => {
   try {
     // Fetch products from the database
-    const products = await Product.find().populate('subcategoryId', 'name');;
+    const products = await Product.find()
+              .populate('subcategoryId', 'name')
+              .populate('shopId', 'name'); // Populate shop name
 
     // Send the products in the response
     res.status(200).json(products);
@@ -81,6 +83,27 @@ console.log(query);
   }
 };
 
+const getProductsForUser = async (req, res) => {
+  try {
+    // Assuming the logged-in user ID is stored in req.user (from JWT or session middleware)
+    const userId = req.params.userId;
+
+    // Find products where the Shop's userId matches the logged-in userId
+    const products = await Product.find()
+      .populate({
+        path: 'shopId',
+        match: { userId: userId }, // Filter by the logged-in user's ID
+        select: 'name userId' // Select only the shop name and userId
+      });
+
+    // Filter out products where the shopId wasn't matched (i.e., shopId.userId doesn't match userId)
+    const filteredProducts = products.filter(product => product.shopId !== null);
+
+    res.json(filteredProducts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching products for user', error });
+  }
+};
 
 const getSubCategoriesProducts = async (req, res) => {
   try {
@@ -104,10 +127,10 @@ const getSubCategoriesProducts = async (req, res) => {
 // @desc    Add a new product
 // create a new Product
 const createProduct =  async (req, res) => {
-  const { name, price, image, brand, countInStock, description, subcategoryId } = req.body;
+  const { name, price, image, brand, countInStock, description, subcategoryId, shopId } = req.body;
 
   try {
-    const newProduct = new Product({ name, price, image, brand, countInStock, description, subcategoryId });
+    const newProduct = new Product({ name, price, image, brand, countInStock, description, subcategoryId, shopId });
     const product = await newProduct.save();
     res.json(product);
   } catch (error) {
@@ -115,7 +138,7 @@ const createProduct =  async (req, res) => {
   }
 };
 
-// Update a category
+// Update a category 
 const updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(req.params.id,
@@ -139,5 +162,24 @@ const deleteProduct =  async (req, res) => {
   }
 };
 
+const uploadProductImage = (req, res) => {
+  // Use Multer's `upload.single('image')` inside the controller
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Image upload failed', error: err.message });
+    }
 
-export { getProducts, getProductById, getProductsByQuery, getTodayProducts, getSubCategoriesProducts, createProduct, updateProduct, deleteProduct };
+    // If no error, the file is uploaded successfully, and we can access it
+    try {
+      // The uploaded image's URL will be available in req.file.path (from Cloudinary)
+      const imageUrl = req.file.path;
+      res.json({ imageUrl });
+    } catch (error) {
+      res.status(500).json({ message: 'Error handling image upload', error });
+    }
+  });
+};
+
+
+export { getProducts, getProductById, getProductsByQuery, getTodayProducts, getProductsForUser, 
+         getSubCategoriesProducts, createProduct, updateProduct, deleteProduct, uploadProductImage };

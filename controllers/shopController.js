@@ -1,5 +1,24 @@
 import Shop from '../models/Shop.js';
 
+const getShopsForUser = async (req, res) => {
+  try {
+    // Extract userId from the request parameters or request body
+    const userId = req.params.userId //|| req.user._id;
+
+    // Fetch Shops that belong to the specific user
+    const shops = await Shop.find({ userId }).populate('userId', 'name');
+
+    // Send the shops in the response
+    res.status(200).json(shops);
+  } catch (error) {
+    // Handle any errors
+    console.error('Error fetching shops:', error);
+    res.status(500).json({ message: 'Server error. Unable to fetch shops.' });
+  }
+};
+
+
+
 const getShops = async (req, res) => {
   try {
     // Fetch Shops from the database
@@ -48,4 +67,4 @@ const deleteShop =  async (req, res) => {
   }
 };
 
-export { getShops,createShop,updateShop, deleteShop };
+export { getShopsForUser, getShops,createShop,updateShop, deleteShop };
