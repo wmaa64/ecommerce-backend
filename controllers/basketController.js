@@ -1,4 +1,5 @@
 // controllers/basketController.js
+import mongoose from 'mongoose';
 import Basket from '../models/Basket.js';
 
 // Add item to basket
@@ -29,9 +30,9 @@ const addToBasket = async (req, res) => {
 // Get user basket
 const getBasket = async (req, res) => {
   const { userId } = req.params;
-
+ 
   try {
-    const basket = await Basket.findOne({ userId }).populate('items.productId');
+    const basket = await Basket.findOne({ userId }).populate('items.productId')  ;
     res.status(200).json(basket);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching basket', error });
