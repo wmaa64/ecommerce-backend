@@ -58,4 +58,21 @@ const removeFromBasket = async (req, res) => {
   }
 };
 
-export { addToBasket, getBasket, removeFromBasket };
+
+// Delete a User Basket
+const deleteUserBasket =  async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const basket = await Basket.findOneAndDelete({userId});
+    
+    if (!basket) {
+      return res.status(404).json({ message: 'Basket not found' });
+    }
+
+    res.status(200).json({ message: 'Basket deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting basket', error });
+  }
+};
+
+export { addToBasket, getBasket, removeFromBasket, deleteUserBasket };

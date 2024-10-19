@@ -9,6 +9,8 @@ import categoryRoutes from './routes/categoryRoutes.js';
 import subcategoryRoutes from './routes/subcategoryRoutes.js';
 import shopRoutes from './routes/shopRoutes.js';
 import basketRoutes from './routes/basketRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import paymobRoutes from './routes/paymobRoutes.js';
 
 dotenv.config();
 
@@ -26,6 +28,8 @@ app.use('/api/categories',categoryRoutes );
 app.use('/api/subcategories', subcategoryRoutes);
 app.use('/api/shops' , shopRoutes);
 app.use('/api/basket', basketRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/payments', paymobRoutes);
 
 
 const dbURI = process.env.MONGODB_URI;
