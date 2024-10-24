@@ -2,6 +2,19 @@
 import Product from '../models/Product.js';
 import { upload } from '../utils/cloudinaryConfig.js';
 
+const getFeaturedProducts = async (req, res) => {
+  try {
+    // Fetch featured products (assuming there's a 'featured' field in the Product model)
+    const products = await Product.find({ featured: true }).limit(5);
+    
+    // Send the products in the response
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error fetching featured products:', error);
+    res.status(500).json({ message: 'Server error. Unable to fetch featured products.' });
+  }
+};
+
 const getProducts = async (req, res) => {
   try {
     // Fetch products from the database
@@ -180,6 +193,5 @@ const uploadProductImage = (req, res) => {
   });
 };
 
-
 export { getProducts, getProductById, getProductsByQuery, getTodayProducts, getProductsForUser, 
-         getSubCategoriesProducts, createProduct, updateProduct, deleteProduct, uploadProductImage };
+         getSubCategoriesProducts, createProduct, updateProduct, deleteProduct, uploadProductImage, getFeaturedProducts };

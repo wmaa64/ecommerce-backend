@@ -11,6 +11,7 @@ const productSchema = mongoose.Schema(
     description: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
     shopId: { type: mongoose.Schema.Types.ObjectId, ref: 'Shop', require: true},
+    featured: { type: Boolean, default: false }  // Add the featured field,
   }
 );
 
