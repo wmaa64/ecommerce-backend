@@ -14,7 +14,12 @@ const getCategoryWithSubCategory = async (req, res) => {
        const subcats = subcategories.filter(sub => sub.categoryId.toString() === category._id.toString());
        return {
          ...category.toObject(),
-         subcategories: subcats,
+         //subcategories: subcats,
+         subcategories: subcats.map((sub) => ({
+          _id: sub._id,
+          name: sub.name,
+          description: sub.description
+        })),
        };
      });
     
