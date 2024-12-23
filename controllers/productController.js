@@ -19,8 +19,6 @@ const getProducts = async (req, res) => {
   try {
     // Fetch products from the database
     const products = await Product.find()
-              .populate('subcategoryId', 'name')
-              .populate('shopId', 'name'); // Populate shop name
 
     // Send the products in the response
     res.status(200).json(products);
@@ -140,10 +138,10 @@ const getSubCategoriesProducts = async (req, res) => {
 // @desc    Add a new product
 // create a new Product
 const createProduct =  async (req, res) => {
-  const { name, price, image, brand, countInStock, description, subcategoryId, shopId } = req.body;
+  const { name, description, price, image, categoryId, topselling } = req.body;
 
   try {
-    const newProduct = new Product({ name, price, image, brand, countInStock, description, subcategoryId, shopId });
+    const newProduct = new Product({ name, description, price, image, categoryId, topselling });
     const product = await newProduct.save();
     res.json(product);
   } catch (error) {

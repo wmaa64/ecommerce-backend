@@ -35,7 +35,6 @@ const registerUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        isAdmin: user.isAdmin,
         isSeller: user.isSeller,
         token: generateToken(user._id),
       });
