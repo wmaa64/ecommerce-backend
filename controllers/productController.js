@@ -15,10 +15,23 @@ const getFeaturedProducts = async (req, res) => {
   }
 };
 
+const getTopSellingProducts = async (req, res) => {
+  try {
+    // Fetch featured products (assuming there's a 'featured' field in the Product model)
+    const products = await Product.find({ topselling: true }).limit(5);
+    
+    // Send the products in the response
+    res.status(200).json(products);
+  } catch (error) {
+    console.error('Error fetching Top Selling products:', error);
+    res.status(500).json({ message: 'Server error. Unable to fetch Top Selling products.' });
+  }
+};
+
 const getProducts = async (req, res) => {
   try {
     // Fetch products from the database
-    const products = await Product.find()
+    const products = await Product.find().populate('categoryId', 'name.en')
 
     // Send the products in the response
     res.status(200).json(products);
@@ -192,4 +205,5 @@ const uploadProductImage = (req, res) => {
 };
 
 export { getProducts, getProductById, getProductsByQuery, getTodayProducts, getProductsForUser, 
-         getSubCategoriesProducts, createProduct, updateProduct, deleteProduct, uploadProductImage, getFeaturedProducts };
+         getSubCategoriesProducts, createProduct, updateProduct, deleteProduct, uploadProductImage, getFeaturedProducts,
+         getTopSellingProducts };

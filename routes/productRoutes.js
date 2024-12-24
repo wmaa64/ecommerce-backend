@@ -1,6 +1,7 @@
 import express from 'express';
 import { getProducts, getProductById , getProductsByQuery, getTodayProducts, getProductsForUser, getSubCategoriesProducts,
-         createProduct, updateProduct, deleteProduct, uploadProductImage, getFeaturedProducts } from '../controllers/productController.js';
+         createProduct, updateProduct, deleteProduct, uploadProductImage, getFeaturedProducts,
+         getTopSellingProducts } from '../controllers/productController.js';
 
 const router = express.Router();
 
@@ -9,6 +10,8 @@ router.get('/', getProducts);
 router.post('/', createProduct);
 
 router.get('/featured', getFeaturedProducts);
+router.get('/topselling', getTopSellingProducts);
+
 router.get('/searching', getProductsByQuery)
 router.get('/created-today', getTodayProducts)
 router.get('/user-products/:userId',getProductsForUser);
