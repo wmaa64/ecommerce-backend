@@ -2,6 +2,7 @@
 import Product from '../models/Product.js';
 import { upload } from '../utils/cloudinaryConfig.js';
 
+
 const getFeaturedProducts = async (req, res) => {
   try {
     // Fetch featured products (assuming there's a 'featured' field in the Product model)

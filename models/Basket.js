@@ -23,5 +23,6 @@ const basketSchema = new mongoose.Schema({
   ],
 }, { timestamps: true });
 
+
 const Basket = mongoose.model('Basket', basketSchema);
 export default Basket;
