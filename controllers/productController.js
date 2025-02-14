@@ -1,4 +1,5 @@
 //import asyncHandler from 'express-async-handler';
+import mongoose from 'mongoose';
 import Product from '../models/Product.js';
 import { upload } from '../utils/cloudinaryConfig.js';
 
@@ -133,8 +134,10 @@ const getProductsForUser = async (req, res) => {
 const getSubCategoriesProducts = async (req, res) => {
   try {
       // Extract subcategory IDs from query parameters
-      const subcategoryIds = req.query.subcategoryIds.split(',');
-
+      const subcategoryIds = req.query.subcategoryIds
+      ? req.query.subcategoryIds.split(',').map(id => new mongoose.Types.ObjectId(id.trim()))
+      : [];
+      
       // Fetch products that match any of the subcategory IDs
       const products = await Product.find({ subcategoryId: { $in: subcategoryIds } });
   
